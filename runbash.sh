@@ -23,7 +23,11 @@ mv "${bilifile}/${dir}/${timeid}-${title}.flv" "${bilifile}/${dir}/${text}.flv"
 }
 
 rclonesc(){
-rclone copy "${bilifile}/${dir}/${text}.$1" "${rclonedir}/${dir}/${timeid}/" --ignore-errors -q && rm -rf "${bilifile}/${dir}/${text}.$1"
+rclone copy "${bilifile}/${dir}/${text}.$1" "${rclonedir}/${dir}/${timeid}/" --ignore-errors -q"
+}
+
+rmlocal(){
+    rm "${bilifile}/${dir}/${text}.$1"
 }
 
 echo "开始处理弹幕"
@@ -35,5 +39,6 @@ ffmpeglog=$(ffmpegzm)
 [ ! ${ffmpeglog} ] && echo "视频处理完成" || echo "视频处理出现问题！"
 
 echo "开始上传Onedrive"
-rclonelog=$(rclonesc mkv ; rclonesc flv ; rclonesc xml ; rclonesc ass)
+if ${uploadorigin}; then rclonelog=$(rclonesc mkv ; rclonesc flv ; rclonesc xml ; rclonesc ass); else rclonelog=$(rclonesc mkv ; rclonesc ass); fi
 [ ! ${rclonelog} ] && echo "文件上传成功" || echo "文件上传出现问题！"
+if ${deletelocal} && [ ! ${rclonelog} ]; then rmlog=$(rmlocal mkv ; rmlocal flv ; rmlocal xml ; rmlocal ass) ; else echo "本地文件未删除";fi

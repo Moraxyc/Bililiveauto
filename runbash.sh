@@ -23,11 +23,11 @@ mv "${bilifile}/${dir}/${timeid}-${title}.flv" "${bilifile}/${dir}/${text}.flv"
 }
 
 rclonesc(){
-rclone copy "${bilifile}/${dir}/${text}.$1" "${rclonedir}/${dir}/${timeid}/" --ignore-errors -q"
+rclone copy "${bilifile}/${dir}/${text}.$1" "${rclonedir}/${dir}/${timeid}/" --ignore-errors -q
 }
 
 rmlocal(){
-    rm "${bilifile}/${dir}/${text}.$1"
+rm "${bilifile}/${dir}/${text}.$1"
 }
 
 echo "开始处理弹幕"

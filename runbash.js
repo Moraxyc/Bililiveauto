@@ -18,10 +18,10 @@ function runbash(filepath){
           return;
       }
       var text = "文件路径: " + filepath.slice(0, -4);
-      if( 4 == stdout && true == process.env.uploadorigin ){
+      if( 4 == stdout && process.env.uploadorigin ){
         var banner = "BiliLive提醒: [" + filepath.split('/')[0].split('-')[1] + "](https://live.bilibili.com/" + filepath.split('/')[0].split('-')[0] + ")的直播文件已全部上传成功 ！🎉"
         tgnotice(banner, text)
-      } else if ( 2 == stdout && false == process.env.uploadorigin ){
+      } else if ( 2 == stdout && process.env.uploadorigin ){
 	var banner = "BiliLive提醒: [" + filepath.split('/')[0].split('-')[1] + "](https://live.bilibili.com/" + filepath.split('/')[0].split('-')[0] + ")的直播文件已全部上传成功 ！🎉"
         tgnotice(banner, text)
       } else {

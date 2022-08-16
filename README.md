@@ -1,5 +1,6 @@
 # Bililiveauto
-兼容哔哩哔哩录播姬的自动转封装、自动上传、弹幕转码脚本
+
+兼容[B站录播姬](https://github.com/BililiveRecorder/BililiveRecorder)的自动转封装、自动上传、弹幕转码脚本
 
 ## 下载
 
@@ -136,3 +137,15 @@ WantedBy=multi-user.target
 
 如果需要开机启动就
 `systemctl enable bililiveauto`
+
+# 鸣谢
+
+[Bilibili直播](https://live.bilibili.com)
+
+[B站录播姬](https://github.com/BililiveRecorder/BililiveRecorder)
+
+[DanmakuFactory](https://github.com/hihkm/DanmakuFactory)
+
+[Rclone](https://github.com/rclone/rclone)
+
+[FFmpeg](https://git.ffmpeg.org/ffmpeg.git)

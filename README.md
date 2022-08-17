@@ -121,15 +121,11 @@ Description=兼容Bililive录播姬的自动提醒以及自动转码、上传脚
 [Service]
 ExecStart=/usr/bin/node <path>/Bililiveauto/server.js
 Restart=always
-User=brec
-Group=brec
 WorkingDirectory=<path>/Bililiveauto
 
 [Install]
 WantedBy=multi-user.target
 ```
-
-`chown -R brec:brec <path>/Bililiveauto`
 
 `<path>`占位符表示脚本所在目录的父目录
 

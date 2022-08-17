@@ -7,7 +7,7 @@ const tgnotice = require('./tgnotice')
  
 app.use(express.json({ extended: false }));
 //  POST 请求
-app.post('/bililive', function (req, res) {
+app.post('/', function (req, res) {
     //读取body中的数据
     res.sendStatus(200);
     console.log("Webhook: 录播姬 POST 到达 事件：" + req.body.EventType);

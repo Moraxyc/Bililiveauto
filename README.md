@@ -94,7 +94,7 @@ curl https://rclone.org/install.sh | sudo bash
 
 配置及使用建议Google一下，教程太多就不反复造轮子了
 
-## 运行及使用
+## 运行
 
 运行本脚本需要先安装nodejs 
 
@@ -133,6 +133,10 @@ WantedBy=multi-user.target
 
 如果需要开机启动就
 `systemctl enable bililiveauto`
+
+## 最后一步
+
+在录播姬的设置里, 将地址填入"webhook v2"即可, 如"http://127.0.0.1:8081"
 
 # 鸣谢
 

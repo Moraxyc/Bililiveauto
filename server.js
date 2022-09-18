@@ -14,8 +14,7 @@ app.post('/', function (req, res) {
     //判断直播事件：开播、下播、录制、文件关闭等
     switch(req.body.EventType) {
         case "FileClosed":
-            var filepath = req.body.EventData.RelativePath;
-            runbash(filepath);
+            runbash(req.body.EventData.RelativePath, req.body.EventData.RoomId, req.body.EventData.Name, req.body.EventData.Title, req.body.EventData.FileOpenTime);
             break;
         case "StreamStarted":
             var banner = "BiliLive提醒: \"*" + req.body.EventData.Name + "*\"的直播开始了，快来看看吧！";

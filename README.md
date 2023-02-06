@@ -106,33 +106,32 @@ nvm install --lts
 ```
 然后在此脚本目录运行`node server.js`即可
 
-### Systemd运行
+### pm2持久化运行
 
-直接使用node运行可能因为其他原因中断，建议用systemd保持常态化运行
+安装pm2
 
-请修改下方路径为脚本所在路径
-
-`nano /etc/systemd/system/bililiveauto.service`
-
-```
-[Unit]
-Description=兼容Bililive录播姬的自动提醒以及自动转码、上传脚本
-
-[Service]
-ExecStart=/usr/bin/node <path>/Bililiveauto/server.js
-Restart=always
-WorkingDirectory=<path>/Bililiveauto
-
-[Install]
-WantedBy=multi-user.target
+```bash
+npm install pm2 -g
 ```
 
-`<path>`占位符表示脚本所在目录的父目录
+运行bililiveauto
 
-编辑完Systemd服务文件后运行`systemctl daemon-reload`重载Systemd，然后`systemctl start bililiveauto`开始运行，通过`systemctl status bililiveauto`确认运行没有问题后就可以安心享受自动化带来的便利了！
+```bash
+pm2 start server.js --name bililiveauto
+```
 
-如果需要开机启动就
-`systemctl enable bililiveauto`
+配置pm2开机自启
+root用户全自动，非root用户请执行命令后根据提示复制命令执行
+```bash
+pm2 startup
+```
+
+储存当前服务列表并加入自启
+```bash
+pm2 save
+```
+
+此致，你的bililiveauto将自动在后台运行并在重启时自启。可使用`pm2 status`查看服务状态，`pm2 logs bililiveauto`查看日志，`pm2 monit`打开状态监视器。
 
 ## 最后一步
 

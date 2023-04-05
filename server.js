@@ -2,7 +2,7 @@ const dotenv = require("dotenv")
 dotenv.config()
 const express = require('express');
 const app = express();
-const runbash = require('./runbash')
+const processFile = require('./processFile')
 const tgnotice = require('./tgnotice')
  
 app.use(express.json({ extended: false }));
@@ -15,7 +15,7 @@ app.post('/', function (req, res) {
     //判断直播事件：开播、下播、录制、文件关闭等
     switch(req.body.EventType) {
         case "FileClosed":
-            runbash(req.body.EventData.RelativePath, req.body.EventData.RoomId, req.body.EventData.Name, req.body.EventData.Title, req.body.EventData.FileOpenTime);
+            processFile(req.body.EventData.RelativePath, req.body.EventData.RoomId, req.body.EventData.Name, req.body.EventData.FileOpenTime);
             break;
         case "StreamStarted":
             var banner = `BiliLive提醒: "*${req.body.EventData.Name}*"的直播开始了，快来看看吧！`;

@@ -10,28 +10,38 @@ git clone https://github.com/Morax-xyc/Bililiveauto
 
 ## 配置
 
-此脚本使用.env文件作为配置文件，模板如下：
+此脚本使用`.env`文件作为配置文件，模板如下：
 ```yaml
 # .env
 
-#run
+#是否开启debug模式，true/false
+DEBUG=false
+
+#是否上传原始文件？
+UPLOAD_ORIGIN=false
+
+#是否删除本地文件？
+DELETE_LOCAL=true
+
+#时区
+TZ=Asia/Shanghai
+
+#监听端口
 port=8081
-rclonedir=od:/Bililive # rclone中配置的上传地址
-danmufc=/home/danmu/DM # danmakufactory编译后的二进制文件
-workdir=/home/bililiveauto # 脚本所在文件夹
-bilifile=/home/brec/file # 录播姬的工作目录
+
+#DanmakuFactory二进制文件路径
+DANMU_FC_PATH=
+
+#录播姬录制文件路径
+BILI_FILE_PATH=
+
+#rclone
+RCLONE_CONFIG=/root/.config/rclone/rclone.conf
+RCLONE_PATH=
 
 #Telegram
 TG_CHAT_ID=12345678 # Telegram ID
 TG_TOKEN=9876543:abcdeffhijklmnopqrstuvwxyz # Telegram Bot Token
-
-#功能开关
-
-#是否上传原始文件？true/false
-uploadorigin=false
-
-#是否删除本地文件？true/false
-deletelocal=true
 ```
 
 ### 通知
@@ -81,16 +91,17 @@ deletelocal=true
 
 本脚本使用FFmpeg来处理视频文件
 
-录播姬录制下来的文件为flv格式，但编码就是h264，所以可以很方便地转封装为mkv格式
+录播姬录制下来的文件为flv格式，但编码就是h264，所以可以很方便地转封装为mkv格式以提高播放器兼容性
 
 ### 自动上传
 
 自动上传使用rclone
 
-安装脚本:
-```bash
-curl https://rclone.org/install.sh | sudo bash
-```
+rclone在后续`npm install`中，将由"rclone.js"自动下载
+
+`RCLONE_CONFIG`填写配置文件路径，如果从未安装过rclone，可以通过`npx rclone config`添加配置，并通过`npx rclone config file`获取配置文件路径
+
+`RCLONE_PATH`填写想要上传的远程路径即可，如`od:Bililive`
 
 配置及使用建议Google一下，教程太多就不反复造轮子了
 
@@ -104,6 +115,13 @@ curl https://rclone.org/install.sh | sudo bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
 nvm install --lts
 ```
+
+### 安装依赖
+
+```bash
+npm install
+```
+
 然后在此脚本目录运行`node server.js`即可
 
 ### pm2持久化运行

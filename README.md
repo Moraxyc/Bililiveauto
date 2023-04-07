@@ -5,7 +5,7 @@
 ## 下载
 
 ```bash
-git clone https://github.com/Morax-xyc/Bililiveauto
+git clone https://github.com/Moraxyc/Bililiveauto
 ```
 
 ## 配置

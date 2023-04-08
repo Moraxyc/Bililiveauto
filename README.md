@@ -23,6 +23,12 @@ UPLOAD_ORIGIN=false
 #是否删除本地文件？
 DELETE_LOCAL=true
 
+#文件上传完成后是否提醒
+NOTICE_FILE_UPLOADED=true
+
+#哪些格式的文件上传完成后需要提醒
+NOTICE_FILE_FORMAT=flv mkv
+
 #时区
 TZ=Asia/Shanghai
 
@@ -39,18 +45,9 @@ BILI_FILE_PATH=
 RCLONE_CONFIG=/root/.config/rclone/rclone.conf
 RCLONE_PATH=
 
-#Telegram
-TG_CHAT_ID=12345678 # Telegram ID
-TG_TOKEN=9876543:abcdeffhijklmnopqrstuvwxyz # Telegram Bot Token
+#Apprise配置url，如若配置多个，可通过空格分割
+APPRISE_URLS=
 ```
-
-### 通知
-
-本脚本使用Telegram来通知，只需要向[@userinfobot](https://t.me/userinfobot)发送任意消息即可得到Telegram ID; 向[@BotFather](https://t.me/BotFather)申请Bot获得Bot Token
-
-最后将两者填入配置文件即可
-
-当然要记得私聊一下你的bot
 
 ### 弹幕处理
 
@@ -105,6 +102,22 @@ rclone在后续`npm install`中，将由"rclone.js"自动下载
 
 配置及使用建议Google一下，教程太多就不反复造轮子了
 
+### 通知
+
+脚本使用[Apprise](https://github.com/caronc/apprise)发送通知，配置方法见[其项目wiki](https://github.com/caronc/apprise/wiki)
+
+由于Apprise是Python，因此需要安装python并用pip安装apprise
+
+```sh
+apt install python3 pip -y
+
+pip install apprise
+```
+
+基本结构为URL，例如Telegram的Apprise URL便是`tgram://123456:654545shbjkjadkshj653146/114514`
+
+该配置支持多个通知，只需用空格隔开即可
+
 ## 运行
 
 运行本脚本需要先安装nodejs 
@@ -153,9 +166,11 @@ pm2 save
 
 ## 最后一步
 
-在录播姬的设置里, 将地址填入"webhook v2"即可, 如"http://127.0.0.1:8081"
+在录播姬的设置里, 将监听地址填入"webhook v2"即可, 如"http://127.0.0.1:8081"
 
 # 鸣谢
+
+[Apprise](https://github.com/caronc/apprise)
 
 [Bilibili直播](https://live.bilibili.com)
 

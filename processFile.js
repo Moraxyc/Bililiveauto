@@ -6,15 +6,17 @@ const { spawn } = require("child_process");
 const moment = require("moment-timezone");
 const ffmpeg = require("fluent-ffmpeg");
 const rclone = require("rclone.js");
-const tgnotice = require("./tgnotice");
+const appriseNotice = require("./apprise")
 
 const rclonePath = process.env.RCLONE_PATH;
 const bilifilePath = process.env.BILI_FILE_PATH;
 const danmufcPath = process.env.DANMU_FC_PATH;
 const timezone = process.env.TZ;
 const debug = process.env.DEBUG === "true";
+const noticeFileFormat = process.env.NOTICE_FILE_FORMAT;
 const uploadOrigin = process.env.UPLOAD_ORIGIN === "true";
 const deleteLocal = process.env.DELETE_LOCAL === "true";
+const noticeFileUploaded = process.env.NOTICE_FILE_UPLOADED === "true"
 
 /**
  * 删除指定路径下的文件
@@ -38,6 +40,7 @@ function deleteFile(filePath) {
  * @param {string} fileopentime - 录像文件开始时间
  */
 async function processFile(filepath, roomid, name, fileopentime) {
+  const filepathNoExtension = filepath.slice(0, -4);
   const timeid = moment(fileopentime)
     .tz(timezone)
     .format("YYYY年MM月DD日HH时mm分ss秒SSS");
@@ -50,7 +53,7 @@ async function processFile(filepath, roomid, name, fileopentime) {
   async function rcUpload(uploadFormat, originFormat) {
     debug &&
       console.log(`上传 ${uploadFormat} 至 ${rclonePath}/${roomid}-${name}/${timeid}/`);
-    const results = rclone.copy(`${bilifilePath}/${filepath.slice(0, -4)}.${uploadFormat}`, `${rclonePath}/${roomid}-${name}/${timeid}/`, {
+    const results = rclone.copy(`${bilifilePath}/${filepathNoExtension}.${uploadFormat}`, `${rclonePath}/${roomid}-${name}/${timeid}/`, {
       "ignore-errors": true
     });
     results.stdout.on("data", (data) => {
@@ -63,9 +66,12 @@ async function processFile(filepath, roomid, name, fileopentime) {
       if (code === 0) {
         console.log(`上传 ${uploadFormat} 成功`);
         deleteLocal &&
-          deleteFile(`${bilifilePath}/${filepath.slice(0, -4)}.${uploadFormat}`);
+          deleteFile(`${bilifilePath}/${filepathNoExtension}.${uploadFormat}`);
         if (!uploadOrigin && deleteLocal) {
-          deleteFile(`${bilifilePath}/${filepath.slice(0, -4)}.${originFormat}`);
+          deleteFile(`${bilifilePath}/${filepathNoExtension}.${originFormat}`);
+        }
+        if (noticeFileUploaded && noticeFileFormat.includes(uploadFormat)) {
+          appriseNotice(`BiliLive提醒:"${name}"的直播录像文件上传成功`, `文件名：${filepathNoExtension}.${uploadFormat}`)
         }
       }
     });
@@ -79,7 +85,7 @@ async function processFile(filepath, roomid, name, fileopentime) {
       const convert = new ffmpeg(`${bilifilePath}/${filepath}`);
       debug && console.log("开始转换video格式");
       convert
-        .save(`${bilifilePath}/${filepath.slice(0, -4)}.mkv`)
+        .save(`${bilifilePath}/${filepathNoExtension}.mkv`)
         .videoCodec("copy")
         .on("end", async () => {
           console.log("转换video格式成功");
@@ -105,12 +111,12 @@ async function processFile(filepath, roomid, name, fileopentime) {
    * 转换弹幕格式并上传到rclone
    */
   const danmakuPromise = new Promise((resolve, reject) => {
-    const danmakuConvert = `echo y | ${danmufcPath} -o ass "${bilifilePath}/${filepath.slice(0, -4)}.ass" -i xml "${bilifilePath}/${filepath.slice(0, -4)}.xml"`;
+    const danmakuConvert = `echo y | ${danmufcPath} -o ass "${bilifilePath}/${filepathNoExtension}.ass" -i xml "${bilifilePath}/${filepathNoExtension}.xml"`;
 
     const stdioOption = debug ? "inherit" : "ignore";
 
     const xml = fs.readFileSync(
-      `${bilifilePath}/${filepath.slice(0, -4)}.xml`,
+      `${bilifilePath}/${filepathNoExtension}.xml`,
       "utf-8"
     );
 
@@ -148,7 +154,7 @@ async function processFile(filepath, roomid, name, fileopentime) {
       } else {
         if (deleteLocal && !danmakuExist) {
           debug && console.log("无弹幕输出，删除 xml");
-          deleteFile(`${bilifilePath}/${filepath.slice(0, -4)}.xml`);
+          deleteFile(`${bilifilePath}/${filepathNoExtension}.xml`);
           return;
         }
         console.log(`转换弹幕格式失败，错误代码: ${code}`);
@@ -170,7 +176,7 @@ async function processFile(filepath, roomid, name, fileopentime) {
     console.error(`上传文件失败：${err.message}`);
     const text = `文件路径: ${roomid}-${name}/${timeid}`;
     const banner = `BiliLive提醒: [${name}](https://live.bilibili.com/${roomid})的直播文件部分上传失败！⚠请及时查阅！`;
-    tgnotice(banner, text);
+    appriseNotice(banner, text);
   }
 }
 

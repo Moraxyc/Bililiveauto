@@ -23,6 +23,9 @@ UPLOAD_ORIGIN=false
 #是否删除本地文件？
 DELETE_LOCAL=true
 
+#转封装原格式为：mp4 mkv etc.
+CONVERT_FORMAT=mkv
+
 #文件上传完成后是否提醒
 NOTICE_FILE_UPLOADED=true
 
@@ -88,7 +91,9 @@ APPRISE_URLS=
 
 本脚本使用FFmpeg来处理视频文件
 
-录播姬录制下来的文件为flv格式，但编码就是h264，所以可以很方便地转封装为mkv格式以提高播放器兼容性
+录播姬录制下来的文件为flv格式，但编码就是h264，所以可以很方便地转封装为mkv或mp4格式以提高播放器兼容性
+
+可通过`CONVERT_FORMAT`配置项指定
 
 ### 自动上传
 

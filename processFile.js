@@ -12,8 +12,9 @@ const rclonePath = process.env.RCLONE_PATH;
 const bilifilePath = process.env.BILI_FILE_PATH;
 const danmufcPath = process.env.DANMU_FC_PATH;
 const timezone = process.env.TZ;
-const debug = process.env.DEBUG === "true";
+const convertFormat = process.env.CONVERT_FORMAT;
 const noticeFileFormat = process.env.NOTICE_FILE_FORMAT;
+const debug = process.env.DEBUG === "true";
 const uploadOrigin = process.env.UPLOAD_ORIGIN === "true";
 const deleteLocal = process.env.DELETE_LOCAL === "true";
 const noticeFileUploaded = process.env.NOTICE_FILE_UPLOADED === "true"
@@ -85,7 +86,7 @@ async function processFile(filepath, roomid, name, fileopentime) {
       const convert = new ffmpeg(`${bilifilePath}/${filepath}`);
       debug && console.log("开始转换video格式");
       convert
-        .save(`${bilifilePath}/${filepathNoExtension}.mkv`)
+        .save(`${bilifilePath}/${filepathNoExtension}.${convertFormat}`)
         .videoCodec("copy")
         .on("end", async () => {
           console.log("转换video格式成功");
@@ -94,8 +95,8 @@ async function processFile(filepath, roomid, name, fileopentime) {
               debug && console.log("开始上传flv");
               await rcUpload("flv");
             }
-            debug && console.log("开始上传mkv");
-            await rcUpload("mkv", "flv");
+            debug && console.log(`开始上传${convertFormat}`);
+            await rcUpload(convertFormat, "flv");
             resolve();
           } catch (error) {
             reject(error);
@@ -126,7 +127,7 @@ async function processFile(filepath, roomid, name, fileopentime) {
       });
       var danmakuExist = true;
     } catch (err) {
-      debug && console.log("无弹幕输出，忽略转换错误");
+      console.log("无弹幕");
       var danmakuExist = false;
     }
 

@@ -115,6 +115,7 @@ async function processFile(filepath, roomid, name, fileopentime) {
   const danmakuPromise = new Promise((resolve, reject) => {
     if (!processDanmu) {
       resolve()
+      return
     }
     const danmakuConvert = `echo y | ${danmufcPath} -o ass "${bilifilePath}/${filepathNoExtension}.ass" -i xml "${bilifilePath}/${filepathNoExtension}.xml"`;
 

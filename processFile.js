@@ -18,6 +18,7 @@ const debug = process.env.DEBUG === "true";
 const uploadOrigin = process.env.UPLOAD_ORIGIN === "true";
 const deleteLocal = process.env.DELETE_LOCAL === "true";
 const noticeFileUploaded = process.env.NOTICE_FILE_UPLOADED === "true"
+const processDanmu = process.env.PROCESS_DANMU === "true"
 
 /**
  * 删除指定路径下的文件
@@ -112,6 +113,9 @@ async function processFile(filepath, roomid, name, fileopentime) {
    * 转换弹幕格式并上传到rclone
    */
   const danmakuPromise = new Promise((resolve, reject) => {
+    if (!processDanmu) {
+      resolve()
+    }
     const danmakuConvert = `echo y | ${danmufcPath} -o ass "${bilifilePath}/${filepathNoExtension}.ass" -i xml "${bilifilePath}/${filepathNoExtension}.xml"`;
 
     const stdioOption = debug ? "inherit" : "ignore";

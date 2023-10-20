@@ -1,3 +1,4 @@
+# 本项目暂停开发，目前版本存在内存溢出问题，待重构 欢迎PR
 # Bililiveauto
 
 兼容[B站录播姬](https://github.com/BililiveRecorder/BililiveRecorder)的自动转封装、自动上传、弹幕转码脚本

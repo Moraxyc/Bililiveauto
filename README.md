@@ -1,5 +1,7 @@
 # Bililiveauto
 
+# 目前脚本存在较严重的内存溢出问题，录制时间过长即可触发。等待后续重构解决
+
 兼容[B站录播姬](https://github.com/BililiveRecorder/BililiveRecorder)的自动转封装、自动上传、弹幕转码脚本
 
 ## 下载
